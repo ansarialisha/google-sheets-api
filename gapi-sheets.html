@@ -1,0 +1,61 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Update Google Sheet</title>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <style>
+            body{
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+            h2{
+                display: flex;
+                justify-content: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div x-data="updateSheet()">
+            <h2>Update Google Sheet Cell</h2>
+            <input type="text" x-model="cellValue" placeholder="Enter text"/>
+            <input type="text" x-model="cellRange" placeholder="Enter cell range"/>
+            <button @click="submitData()">Update Cell</button>
+            <p x-text="responseMessage"></p>
+        </div>
+        <script>
+            function updateSheet() {
+                return {
+                    cellValue: '',
+                    cellRange: '',
+                    responseMessage: '',
+                    async submitData() {
+
+                        let data = {
+                            value: this.cellValue,
+                            range: this.cellRange
+                        };
+
+                        let response = await fetch('./gapi-sheets.php', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        });
+
+                        let text = await response.text(); 
+                        console.log(text);
+                        let result = JSON;
+                        this.responseMessage = result.message || 'Update failed';
+
+                    }
+
+                    
+                }
+            }
+        </script>
+        
+    </body>
+</html>
